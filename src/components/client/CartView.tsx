@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteCart } from "@/redux/features/cart/cart.slice";
+import { deleteCart, updateCart } from "@/redux/features/cart/cart.slice";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { Banknote, Trash } from "lucide-react";
 import Image from "next/image";
@@ -23,6 +23,7 @@ const CartView = () => {
     }, 0);
 
     setSubtotal(totalSum);
+    localStorage.setItem("total", totalSum.toString());
   }, [cartItems]);
 
   const handleDelete = (id: string) => {
@@ -76,9 +77,11 @@ const CartView = () => {
                     if (e.target.value > quantity) {
                       const newSubtotal = subtotal + item.price;
                       setSubtotal(newSubtotal);
+                      localStorage.setItem("total", subtotal.toString());
                     } else {
                       const newSubtotal = subtotal - item.price;
                       setSubtotal(newSubtotal);
+                      localStorage.setItem("total", subtotal.toString());
                     }
                   }}
                 />
@@ -115,9 +118,7 @@ const CartView = () => {
             <span className="font-semibold">Total:</span>
             <span className="text-xl font-bold text-green-500">${total}</span>
           </p>
-          <Link
-            href={`/checkout?subtotal=${subtotalValue}&total=${total}&deliveryCharge=0`}
-          >
+          <Link href={`/payment`}>
             <button className="bg-green-500 hover:bg-green-600 rounded-md text-white w-full font-medium p-2 center gap-2">
               Proceed to checkout <Banknote />
             </button>
