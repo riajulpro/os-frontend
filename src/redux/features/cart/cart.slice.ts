@@ -1,5 +1,7 @@
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 interface CartItem {
-  id: string; // Make id required
+  id: string;
   photo: string;
   name: string;
   rating?: number;
@@ -9,6 +11,7 @@ interface CartItem {
 
 interface CartState {
   cart: CartItem[];
+  subtotal: number;
 }
 
 interface UpdateObjectPayload {
@@ -20,11 +23,13 @@ interface DeleteObjectPayload {
   id: string;
 }
 
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
 const initialState: CartState = {
   cart: [],
+  subtotal: 0,
 };
+
+const calculateSubtotal = (cart: CartItem[]) =>
+  cart.reduce((acc, item) => acc + item.price * parseFloat(item.quantity), 0);
 
 const cartSlice = createSlice({
   name: "cart",
@@ -41,6 +46,8 @@ const cartSlice = createSlice({
       } else {
         state.cart.push(newItem);
       }
+
+      state.subtotal = calculateSubtotal(state.cart);
     },
     updateCart: (state, action: PayloadAction<UpdateObjectPayload>) => {
       const { id, newObj } = action.payload;
@@ -51,13 +58,30 @@ const cartSlice = createSlice({
           ...newObj,
         };
       }
+
+      state.subtotal = calculateSubtotal(state.cart);
     },
     deleteCart: (state, action: PayloadAction<DeleteObjectPayload>) => {
       const { id } = action.payload;
       state.cart = state.cart.filter((obj) => obj.id !== id);
+
+      state.subtotal = calculateSubtotal(state.cart);
+    },
+    updateQuantity: (
+      state,
+      action: PayloadAction<{ id: string; quantity: string }>
+    ) => {
+      const { id, quantity } = action.payload;
+      const item = state.cart.find((obj) => obj.id === id);
+      if (item) {
+        item.quantity = quantity;
+      }
+
+      state.subtotal = calculateSubtotal(state.cart);
     },
   },
 });
 
-export const { addCart, updateCart, deleteCart } = cartSlice.actions;
+export const { addCart, updateCart, deleteCart, updateQuantity } =
+  cartSlice.actions;
 export default cartSlice.reducer;

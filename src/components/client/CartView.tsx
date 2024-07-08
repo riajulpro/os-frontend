@@ -1,38 +1,27 @@
 "use client";
 
-import { deleteCart, updateCart } from "@/redux/features/cart/cart.slice";
+import { deleteCart, updateQuantity } from "@/redux/features/cart/cart.slice";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { Banknote, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 const CartView = () => {
-  const [quantity, setQuantity] = useState<string>("");
-  const [subtotal, setSubtotal] = useState<number>(0);
-  const { cart: cartItems } = useAppSelector((state) => state.cart);
+  const { cart: cartItems, subtotal } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
 
   const delivery = 0;
-
-  useEffect(() => {
-    const totalSum = cartItems.reduce((accumulator, currentValue) => {
-      return (
-        accumulator + currentValue.price * parseFloat(currentValue.quantity)
-      );
-    }, 0);
-
-    setSubtotal(totalSum);
-    localStorage.setItem("total", totalSum.toString());
-  }, [cartItems]);
+  const total = (subtotal + delivery).toFixed(2);
+  const subtotalValue = subtotal.toFixed(2);
 
   const handleDelete = (id: string) => {
     console.log("Deleting item with id:", id);
     dispatch(deleteCart({ id }));
   };
 
-  const total = (subtotal + delivery).toFixed(2);
-  const subtotalValue = subtotal.toFixed(2);
+  const handleQuantityChange = (id: string, quantity: string) => {
+    dispatch(updateQuantity({ id, quantity }));
+  };
 
   return (
     <div className="layout_container py-5 lg:py-10 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3 lg:gap-5">
@@ -72,25 +61,16 @@ const CartView = () => {
                   id="quantity"
                   defaultValue={item.quantity}
                   className="border w-16 p-2"
-                  onChange={(e) => {
-                    setQuantity(e.target.value);
-                    if (e.target.value > quantity) {
-                      const newSubtotal = subtotal + item.price;
-                      setSubtotal(newSubtotal);
-                      localStorage.setItem("total", subtotal.toString());
-                    } else {
-                      const newSubtotal = subtotal - item.price;
-                      setSubtotal(newSubtotal);
-                      localStorage.setItem("total", subtotal.toString());
-                    }
-                  }}
+                  onChange={(e) =>
+                    handleQuantityChange(item.id, e.target.value)
+                  }
                 />
               </div>
               <div className="w-[70px] self-center">
-                ${item.price * parseInt(quantity || item.quantity)}
+                ${item.price * parseInt(item.quantity)}
               </div>
               <div className="w-[70px] self-center">
-                <button onClick={() => handleDelete(item.id!)}>
+                <button onClick={() => handleDelete(item.id)}>
                   <Trash className="hover:text-green-500" />
                 </button>
               </div>
@@ -119,7 +99,10 @@ const CartView = () => {
             <span className="text-xl font-bold text-green-500">${total}</span>
           </p>
           <Link href={`/payment`}>
-            <button className="bg-green-500 hover:bg-green-600 rounded-md text-white w-full font-medium p-2 center gap-2">
+            <button
+              className="bg-green-500 hover:bg-green-600 rounded-md text-white w-full font-medium p-2 center gap-2 disabled:bg-green-200"
+              disabled={subtotal > 0 ? false : true}
+            >
               Proceed to checkout <Banknote />
             </button>
           </Link>

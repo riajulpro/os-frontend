@@ -53,6 +53,7 @@ const Login = () => {
 
       const redirect = Cookies.get("redirect");
       router.push(redirect || "/profile");
+      Cookies.remove("redirect");
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");

@@ -18,6 +18,7 @@ const stripePromise = loadStripe(
 
 export default function Payment() {
   const { token } = useAppSelector((state) => state.auth);
+  const { subtotal } = useAppSelector((state) => state.cart);
   const router = useRouter();
 
   useEffect(() => {
@@ -27,7 +28,7 @@ export default function Payment() {
     }
   }, [token, router]);
 
-  const amount = 49.99;
+  const amount = Number(subtotal);
 
   return (
     <main className="max-w-md mx-auto p-10 text-center border m-10 rounded-md shadow-md">

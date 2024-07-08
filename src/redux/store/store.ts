@@ -20,9 +20,18 @@ const persistConfig = {
   storage,
 };
 
-const persistedCartReducer = persistReducer(persistConfig, cartReducer);
-const persistedWishReducer = persistReducer(persistConfig, wishlistReducer);
-const persistedAuthReducer = persistReducer(persistConfig, authReducer);
+const persistedCartReducer = persistReducer(
+  { ...persistConfig, key: "cart" },
+  cartReducer
+);
+const persistedWishReducer = persistReducer(
+  { ...persistConfig, key: "wishlist" },
+  wishlistReducer
+);
+const persistedAuthReducer = persistReducer(
+  { ...persistConfig, key: "auth" },
+  authReducer
+);
 
 const store = configureStore({
   reducer: {
