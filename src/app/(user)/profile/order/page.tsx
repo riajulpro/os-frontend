@@ -46,7 +46,7 @@ const Sell: React.FC = () => {
   if (isSuccess) {
     return (
       <div className="p-5">
-        <h2 className="text-xl font-bold mb-3">Sales</h2>
+        <h2 className="text-xl font-bold mb-3">Orders</h2>
         <div className="min-h-[300px]">
           <table className="min-w-full bg-white">
             <thead>
