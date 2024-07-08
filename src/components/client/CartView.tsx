@@ -1,9 +1,10 @@
 "use client";
 
-import { deleteCart } from "@/redux/features/cart/cart.slice";
+import { deleteCart, updateCart } from "@/redux/features/cart/cart.slice";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { Banknote, Trash } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const CartView = () => {
@@ -22,12 +23,16 @@ const CartView = () => {
     }, 0);
 
     setSubtotal(totalSum);
+    localStorage.setItem("total", totalSum.toString());
   }, [cartItems]);
 
   const handleDelete = (id: string) => {
-    console.log("Deleting item with id:", id); // Add this line
+    console.log("Deleting item with id:", id);
     dispatch(deleteCart({ id }));
   };
+
+  const total = (subtotal + delivery).toFixed(2);
+  const subtotalValue = subtotal.toFixed(2);
 
   return (
     <div className="layout_container py-5 lg:py-10 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3 lg:gap-5">
@@ -72,9 +77,11 @@ const CartView = () => {
                     if (e.target.value > quantity) {
                       const newSubtotal = subtotal + item.price;
                       setSubtotal(newSubtotal);
+                      localStorage.setItem("total", subtotal.toString());
                     } else {
                       const newSubtotal = subtotal - item.price;
                       setSubtotal(newSubtotal);
+                      localStorage.setItem("total", subtotal.toString());
                     }
                   }}
                 />
@@ -98,7 +105,7 @@ const CartView = () => {
           <p className="border-b py-2 flex justify-between gap-1 items-center">
             <span className="font-semibold">Subtotal:</span>
             <span className="text-xl font-bold text-green-500">
-              ${subtotal.toFixed(2)}
+              ${subtotalValue}
             </span>
           </p>
           <p className="border-b py-2 flex justify-between gap-1 items-center">
@@ -109,13 +116,13 @@ const CartView = () => {
           </p>
           <p className="mb-5 py-2 flex justify-between gap-1 items-center">
             <span className="font-semibold">Total:</span>
-            <span className="text-xl font-bold text-green-500">
-              ${(subtotal + delivery).toFixed(2)}
-            </span>
+            <span className="text-xl font-bold text-green-500">${total}</span>
           </p>
-          <button className="bg-green-500 hover:bg-green-600 rounded-md text-white w-full font-medium p-2 center gap-2">
-            Proceed to checkout <Banknote />
-          </button>
+          <Link href={`/payment`}>
+            <button className="bg-green-500 hover:bg-green-600 rounded-md text-white w-full font-medium p-2 center gap-2">
+              Proceed to checkout <Banknote />
+            </button>
+          </Link>
         </div>
       </div>
     </div>

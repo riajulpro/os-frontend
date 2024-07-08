@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import Image from "next/image";
 const Profile = () => {
   const { user, token } = useAppSelector((state) => state.auth);
+  console.log("user from user profile", user);
   if (!user) return;
   const img = user?.picture || "/images/avatar.jpg";
   const accountCreated = user.createdAt ? new Date(user.createdAt) : new Date();

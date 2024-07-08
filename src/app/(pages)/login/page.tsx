@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import * as Yup from "yup";
+
 const initialValues = {
   email: "",
   password: "",
@@ -25,9 +26,7 @@ const validationSchema = Yup.object({
 
 const Login = () => {
   const [login] = useLoginUserMutation();
-
   const router = useRouter();
-
   const dispatch = useDispatch();
 
   const handleLogin = async (values: TFormValues) => {
@@ -51,7 +50,9 @@ const Login = () => {
       toast.success("Successfully logged in", {
         description: "Welcome back!",
       });
-      router.push("/");
+
+      const redirect = Cookies.get("redirect");
+      router.push(redirect || "/profile");
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");

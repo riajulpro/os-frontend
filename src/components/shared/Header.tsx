@@ -1,6 +1,5 @@
 "use client";
 
-import { navLinks } from "@/utils/navLinks";
 import { Heart, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -8,6 +7,7 @@ import { AccountPanel } from "../client/AccountPanel";
 import { LeftSidebar } from "../client/LeftSidebar";
 import { Badge } from "../ui/badge";
 import { useAppSelector } from "@/redux/hook";
+import { navLinks } from "@/utils/navLinks";
 
 const Header = () => {
   const location = usePathname();
