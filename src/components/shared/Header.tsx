@@ -1,6 +1,5 @@
 "use client";
 
-import { useAppSelector } from "@/redux/hook";
 import { navLinks } from "@/utils/navLinks";
 import { Heart, ShoppingCart } from "lucide-react";
 import Link from "next/link";
