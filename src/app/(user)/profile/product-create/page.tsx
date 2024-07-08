@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Loader } from "lucide-react";
 import { useGetAllCategoriesQuery } from "@/redux/features/category/category.api";
 import { useGetAllBrandsQuery } from "@/redux/features/brand/brand.api";
 import { useGetAllTagsQuery } from "@/redux/features/tag.api";
@@ -12,6 +11,7 @@ import uploadImage from "@/utils/imageUploadByFetch";
 import { LuUploadCloud } from "react-icons/lu";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Loading from "@/app/loading";
 
 const ProductForm: React.FC = () => {
   const [createProduct, { isLoading, isSuccess, isError, error }] =
@@ -282,7 +282,7 @@ const ProductForm: React.FC = () => {
           type="submit"
           className="mt-3 px-4 py-2 bg-primaryMat/95 hover:bg-primaryMat text-white rounded"
         >
-          {isLoading ? <Loader /> : "Create Product"}
+          {isLoading ? <Loading /> : "Create Product"}
         </button>
         {isError && (
           <div className="text-red-500 text-sm">

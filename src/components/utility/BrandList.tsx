@@ -5,9 +5,9 @@ import Modal from "../shared/ModalCompo";
 import BrandForm from "./BrandForm";
 import Image from "next/image";
 import { BsPlus } from "react-icons/bs";
-import { Loader } from "lucide-react";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import Loading from "@/app/loading";
 
 export type IBrand = { _id: string; label: string; value: string, image:string };
 
@@ -40,7 +40,7 @@ const BrandList: React.FC = () => {
   };
 
   if (isLoading) return <div className="w-full center">
-    <Loader />
+    <Loading />
   </div>;
   if (isError) return <p>Error loading brands.</p>;
 

@@ -4,7 +4,7 @@ import {
   useGetAllSellsQuery,
   useUpdateSellStatusMutation,
 } from "@/redux/features/sell/sell.api";
-import { Loader } from "lucide-react";
+import Loading from "@/app/loading";
 
 const Sell: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -32,7 +32,7 @@ const Sell: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen w-full">
-        <Loader />
+        <Loading />
       </div>
     );
   }
