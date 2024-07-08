@@ -44,6 +44,11 @@ export const ownerLinks = [
     Icon: FiShoppingBag,
   },
   {
+    href: "/profile/earning",
+    label: "Earning",
+    Icon: FiShoppingBag,
+  },
+  {
     href: "/profile/product-create",
     label: "Add Product",
     Icon: BsCartCheck,

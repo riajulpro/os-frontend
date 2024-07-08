@@ -370,8 +370,8 @@ const ManageProducts = () => {
                 className="w-full p-2 mb-4 border rounded"
                 required
               >
-                <option value={form.tag?._id! as string}>
-                  {form.tag?.label}
+                <option value={form.tag?._id! as string || ""}>
+                  {form.tag?.label || "select tag"}
                 </option>
                 {tags?.data?.map((tag: any) => (
                   <option key={tag?._id} value={tag?._id}>
