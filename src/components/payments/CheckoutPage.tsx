@@ -6,7 +6,7 @@ import StripeProvider from "./StripeProvider";
 const CheckoutPage = () => {
   return (
     <StripeProvider>
-      <CheckoutForm />
+      <CheckoutForm amount={10} />
     </StripeProvider>
   );
 };
