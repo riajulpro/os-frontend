@@ -7,7 +7,6 @@ import { loadStripe } from "@stripe/stripe-js";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
-import convertToSubcurrency from "@/lib/convertToSubcurrency";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -39,7 +38,7 @@ export default function Payment() {
       </div>
 
       <Elements stripe={stripePromise}>
-        <CheckoutPage amount={convertToSubcurrency(amount)} />
+        <CheckoutPage amount={amount} />
       </Elements>
     </main>
   );
