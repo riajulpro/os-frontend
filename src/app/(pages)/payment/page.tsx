@@ -29,10 +29,10 @@ export default function Payment() {
   }, [token, router]);
 
   return (
-    <main className="max-w-md mx-auto p-10 text-center border m-10 rounded-md shadow-md">
+    <main className="max-w-md mx-auto p-10 border m-10 rounded-md shadow-md">
       <div className="mb-10">
-        <h1 className="text-4xl font-extrabold mb-2">Payment</h1>
-        <h2 className="text-2xl">
+        <h1 className="text-4xl font-extrabold mb-2 text-center">Payment</h1>
+        <h2 className="text-2xl text-center">
           has requested
           <span className="font-bold"> ${amount}</span>
         </h2>

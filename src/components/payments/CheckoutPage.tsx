@@ -19,6 +19,7 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment`, {
       method: "POST",
