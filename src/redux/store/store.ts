@@ -15,24 +15,27 @@ import authReducer from "../features/auth/auth.slice";
 import cartReducer from "../features/cart/cart.slice";
 import wishlistReducer from "../features/wishlist/wishlist.slice";
 
+// Persist configuration
 const persistConfig = {
   key: "root",
   storage,
 };
 
+// Configure persisted reducers
 const persistedCartReducer = persistReducer(
   { ...persistConfig, key: "cart" },
   cartReducer
-);
-const persistedWishReducer = persistReducer(
-  { ...persistConfig, key: "wishlist" },
-  wishlistReducer
 );
 const persistedAuthReducer = persistReducer(
   { ...persistConfig, key: "auth" },
   authReducer
 );
+const persistedWishReducer = persistReducer(
+  { ...persistConfig, key: "wishlist" },
+  wishlistReducer
+);
 
+// Configure store
 const store = configureStore({
   reducer: {
     cart: persistedCartReducer,
@@ -48,9 +51,10 @@ const store = configureStore({
     }).concat(api.middleware),
 });
 
+// Configure persistor
 const persistor = persistStore(store);
 
+// Export types and store/persistor
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-
 export { persistor, store };

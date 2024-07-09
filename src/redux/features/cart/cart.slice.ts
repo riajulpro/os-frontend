@@ -1,5 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  persistReducer,
+  persistStore,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
+// Define CartItem and CartState interfaces
 interface CartItem {
   id: string;
   photo: string;
@@ -23,14 +36,17 @@ interface DeleteObjectPayload {
   id: string;
 }
 
+// Initial state
 const initialState: CartState = {
   cart: [],
   subtotal: 0,
 };
 
+// Function to calculate subtotal
 const calculateSubtotal = (cart: CartItem[]) =>
   cart.reduce((acc, item) => acc + item.price * parseFloat(item.quantity), 0);
 
+// Create cart slice
 const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -79,9 +95,14 @@ const cartSlice = createSlice({
 
       state.subtotal = calculateSubtotal(state.cart);
     },
+    clearCart(state) {
+      state.cart = [];
+      state.subtotal = 0;
+    },
   },
 });
 
-export const { addCart, updateCart, deleteCart, updateQuantity } =
+// Export actions and reducer
+export const { addCart, updateCart, deleteCart, updateQuantity, clearCart } =
   cartSlice.actions;
 export default cartSlice.reducer;
