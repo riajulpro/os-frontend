@@ -1,13 +1,13 @@
 "use client";
 
 import CheckoutPage from "@/components/payments/CheckoutPage";
-import convertToSubcurrency from "@/lib/convertToSubcurrency";
 import { useAppSelector } from "@/redux/hook";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
+import convertToSubcurrency from "@/lib/convertToSubcurrency";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -26,7 +26,7 @@ export default function Payment() {
       Cookies.set("redirect", "/payment");
       return router.push("/login");
     }
-  }, [token, router]);
+  }, [token, router, amount]);
 
   return (
     <main className="max-w-md mx-auto p-10 border m-10 rounded-md shadow-md">
@@ -38,15 +38,8 @@ export default function Payment() {
         </h2>
       </div>
 
-      <Elements
-        stripe={stripePromise}
-        options={{
-          mode: "payment",
-          amount: convertToSubcurrency(amount),
-          currency: "usd",
-        }}
-      >
-        <CheckoutPage amount={amount} />
+      <Elements stripe={stripePromise}>
+        <CheckoutPage amount={convertToSubcurrency(amount)} />
       </Elements>
     </main>
   );

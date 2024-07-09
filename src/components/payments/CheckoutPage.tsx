@@ -1,6 +1,8 @@
 "use client";
 
 import convertToSubcurrency from "@/lib/convertToSubcurrency";
+import { clearCart } from "@/redux/features/cart/cart.slice";
+import { useAppDispatch } from "@/redux/hook";
 import {
   CardCvcElement,
   CardExpiryElement,
@@ -19,6 +21,7 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment`, {
@@ -62,7 +65,7 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
       setErrorMessage(error.message);
     } else {
       router.push(`/payment-success?amount=${amount}`);
-      // The payment UI automatically closes with a success animation.
+      dispatch(clearCart());
     }
 
     setLoading(false);
