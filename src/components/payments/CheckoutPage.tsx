@@ -1,12 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import {
-  useStripe,
-  useElements,
-  PaymentElement,
-} from "@stripe/react-stripe-js";
 import convertToSubcurrency from "@/lib/convertToSubcurrency";
+import {
+  CardCvcElement,
+  CardExpiryElement,
+  CardNumberElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const CheckoutPage = ({ amount }: { amount: number }) => {
   const stripe = useStripe();
@@ -14,7 +18,7 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment`, {
       method: "POST",
@@ -42,18 +46,21 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
       setLoading(false);
       return;
     }
-
-    const { error } = await stripe.confirmPayment({
-      elements,
-      clientSecret,
-      confirmParams: {
-        return_url: `/payment-success?amount=${amount}`,
+    const cardElement = elements.getElement(CardNumberElement);
+    if (!cardElement) {
+      toast.error("Carn is not available");
+      return;
+    }
+    const { error } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: cardElement,
       },
     });
 
     if (error) {
       setErrorMessage(error.message);
     } else {
+      router.push(`/payment-success?amount=${amount}`);
       // The payment UI automatically closes with a success animation.
     }
 
@@ -77,7 +84,43 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
 
   return (
     <form onSubmit={handleSubmit} className="bg-white p-2 rounded-md">
-      {clientSecret && <PaymentElement />}
+      {clientSecret && (
+        <div className="flex flex-col gap-[8px] w-full">
+          <label htmlFor="card-nr" className="label">
+            Card number
+          </label>
+          <div className="px-[20px] w-full flex justify-center items-center h-[50px] border-[1px] border-[#E2E8F0] rounded-[15px]">
+            <CardNumberElement
+              id="card-nr"
+              className="text-[16px] font-[500] bg-white w-full text-[#B4BFCD]"
+            />
+          </div>
+          <div className="flex items-start justify-start gap-[22px] w-full mt-[20px]">
+            <div className="flex flex-col gap-[8px] w-full">
+              <label htmlFor="card-ex" className="label">
+                Card expiry
+              </label>
+              <div className="px-[20px] w-full flex justify-center items-center h-[50px] border-[1px] border-[#E2E8F0] rounded-[15px]">
+                <CardExpiryElement
+                  id="card-ex"
+                  className="text-[16px] font-[500] bg-white w-full text-[#B4BFCD]"
+                />
+              </div>
+            </div>
+            <div className="flex flex-col gap-[8px] w-full">
+              <label htmlFor="card-cv" className="label">
+                CVC
+              </label>
+              <div className="px-[20px] w-full flex justify-center items-center h-[50px] border-[1px] border-[#E2E8F0] rounded-[15px]">
+                <CardCvcElement
+                  id="card-cv"
+                  className="text-[16px] font-[500] bg-white w-full text-[#B4BFCD]"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {errorMessage && <div>{errorMessage}</div>}
 
