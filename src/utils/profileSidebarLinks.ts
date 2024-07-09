@@ -29,6 +29,31 @@ export const customerLinks = [
 
 export const ownerLinks = [
   {
+    href: "/profile/earning",
+    label: "Earning",
+    Icon: FiShoppingBag,
+  },
+  {
+    href: "/profile/order",
+    label: "Orders",
+    Icon: FiShoppingBag,
+  },
+  {
+    href: "/profile/manage-product",
+    label: "Manage Product",
+    Icon: MdOutlineManageHistory,
+  },
+  {
+    href: "/profile/product-create",
+    label: "Add Product",
+    Icon: BsCartCheck,
+  },
+  {
+    href: "/profile/utility",
+    label: "Utility",
+    Icon: MdOutlineManageHistory,
+  },
+  {
     href: "/profile",
     label: "Profile",
     Icon: CiUser,
@@ -37,25 +62,5 @@ export const ownerLinks = [
     href: "/settings",
     label: "Account setting",
     Icon: RiUserSettingsLine,
-  },
-  {
-    href: "/profile/sell",
-    label: "Sales",
-    Icon: FiShoppingBag,
-  },
-  {
-    href: "/profile/product-create",
-    label: "Add Product",
-    Icon: BsCartCheck,
-  },
-  {
-    href: "/profile/manage-product",
-    label: "Manage Product",
-    Icon: MdOutlineManageHistory,
-  },
-  {
-    href: "/profile/utility",
-    label: "Utility",
-    Icon: MdOutlineManageHistory,
   },
 ];

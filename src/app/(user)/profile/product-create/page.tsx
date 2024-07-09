@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Loader } from "lucide-react";
 import { useGetAllCategoriesQuery } from "@/redux/features/category/category.api";
 import { useGetAllBrandsQuery } from "@/redux/features/brand/brand.api";
 import { useGetAllTagsQuery } from "@/redux/features/tag.api";
@@ -12,6 +11,7 @@ import uploadImage from "@/utils/imageUploadByFetch";
 import { LuUploadCloud } from "react-icons/lu";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Loading from "@/app/loading";
 
 const ProductForm: React.FC = () => {
   const [createProduct, { isLoading, isSuccess, isError, error }] =
@@ -21,7 +21,7 @@ const ProductForm: React.FC = () => {
   const { data: tags } = useGetAllTagsQuery(undefined);
   const [userPic, setUserPic] = useState<string | undefined>();
 
-  const router = useRouter()
+  const router = useRouter();
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -49,7 +49,7 @@ const ProductForm: React.FC = () => {
       discountPrice: 0,
       brand: "",
       tag: "",
-      service: ""
+      service: "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Required"),
@@ -64,26 +64,31 @@ const ProductForm: React.FC = () => {
     }),
     onSubmit: async (values) => {
       try {
-
-        if(values.category) {
-          const categoryVal = categories.data.find((category:{value:string}) => category.value === values.category)
-          values.category = categoryVal._id
+        if (values.category) {
+          const categoryVal = categories.data.find(
+            (category: { value: string }) => category.value === values.category
+          );
+          values.category = categoryVal._id;
         }
-        if(values.brand) {
-          const brandVal = brands.data.find((brand:{value:string}) => brand.value === values.brand)
-          values.brand = brandVal._id
+        if (values.brand) {
+          const brandVal = brands.data.find(
+            (brand: { value: string }) => brand.value === values.brand
+          );
+          values.brand = brandVal._id;
         }
-        if(values.tag) {
-          const tagVal = tags.data.find((tag:{value:string}) => tag.value === values.tag)
-          values.tag = tagVal._id
+        if (values.tag) {
+          const tagVal = tags.data.find(
+            (tag: { value: string }) => tag.value === values.tag
+          );
+          values.tag = tagVal._id;
         }
 
-        console.log("values", {...values, photo: userPic});
+        console.log("values", { ...values, photo: userPic });
 
-        await createProduct({...values, photo: userPic}).unwrap();
-        setUserPic("")
+        await createProduct({ ...values, photo: userPic }).unwrap();
+        setUserPic("");
         formik.resetForm();
-        router.push("/profile/manage-product")
+        router.push("/profile/manage-product");
       } catch (error) {
         console.error("Failed to create product:", error);
       }
@@ -176,7 +181,7 @@ const ProductForm: React.FC = () => {
             </div>
           ) : null}
         </div>
-        <div>
+        <div className="">
           <label className="block text-sm font-medium">Stock</label>
           <input
             type="number"
@@ -190,57 +195,76 @@ const ProductForm: React.FC = () => {
             <div className="text-red-500 text-sm">{formik.errors.stock}</div>
           ) : null}
         </div>
-        <div>
-          <label className="block text-sm font-medium">Price</label>
-          <input
-            type="number"
-            name="price"
-            value={formik.values.price}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full border p-2 rounded"
-          />
-          {formik.touched.price && formik.errors.price ? (
-            <div className="text-red-500 text-sm">{formik.errors.price}</div>
-          ) : null}
+        <div className="grid  grid-cols-1 md:grid-cols-2 gap-[10px]">
+          <div>
+            <label className="block text-sm font-medium">Price</label>
+            <input
+              type="number"
+              name="price"
+              value={formik.values.price}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="w-full border p-2 rounded"
+            />
+            {formik.touched.price && formik.errors.price ? (
+              <div className="text-red-500 text-sm">{formik.errors.price}</div>
+            ) : null}
+          </div>
+          <div>
+            <label className="block text-sm font-medium">Discount Price</label>
+            <input
+              type="number"
+              name="discountPrice"
+              value={formik.values.discountPrice}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="w-full border p-2 rounded"
+            />
+            {formik.touched.discountPrice && formik.errors.discountPrice ? (
+              <div className="text-red-500 text-sm">
+                {formik.errors.discountPrice}
+              </div>
+            ) : null}
+          </div>
         </div>
-        <div>
-          <label className="block text-sm font-medium">Discount Price</label>
-          <input
-            type="number"
-            name="discountPrice"
-            value={formik.values.discountPrice}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full border p-2 rounded"
-          />
-          {formik.touched.discountPrice && formik.errors.discountPrice ? (
-            <div className="text-red-500 text-sm">
-              {formik.errors.discountPrice}
-            </div>
-          ) : null}
-        </div>
-        <div>
-          <label className="block text-sm font-medium">Brand</label>
-          <select
-            name="brand"
-            value={formik.values.brand}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full border p-2 rounded"
-          >
-            <option value="" label="Select brand" />
-            {brands?.data.map((brand: any) => (
-              <option
-                key={brand.value}
-                value={brand.value}
-                label={brand.label}
-              />
-            ))}
-          </select>
-          {formik.touched.brand && formik.errors.brand ? (
-            <div className="text-red-500 text-sm">{formik.errors.brand}</div>
-          ) : null}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-[10px]">
+          <div>
+            <label className="block text-sm font-medium">Brand</label>
+            <select
+              name="brand"
+              value={formik.values.brand}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="w-full border p-2 rounded"
+            >
+              <option value="" label="Select brand" />
+              {brands?.data.map((brand: any) => (
+                <option
+                  key={brand.value}
+                  value={brand.value}
+                  label={brand.label}
+                />
+              ))}
+            </select>
+            {formik.touched.brand && formik.errors.brand ? (
+              <div className="text-red-500 text-sm">{formik.errors.brand}</div>
+            ) : null}
+          </div>
+          <div>
+            <label className="block text-sm font-medium">Tag</label>
+            <select
+              name="tag"
+              value={formik.values.tag}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="w-full border p-2 rounded"
+            >
+              <option value="" label="Select tag" />
+              {tags?.data?.map((tag: any) => (
+                <option key={tag.value} value={tag.value} label={tag.label} />
+              ))}
+            </select>
+          </div>
         </div>
         <div>
           <label className="block text-sm font-medium">Service</label>
@@ -253,26 +277,12 @@ const ProductForm: React.FC = () => {
             className="w-full border p-2 rounded"
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium">Tag</label>
-          <select
-            name="tag"
-            value={formik.values.tag}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full border p-2 rounded"
-          >
-            <option value="" label="Select tag" />
-            {tags?.data?.map((tag: any) => (
-              <option key={tag.value} value={tag.value} label={tag.label} />
-            ))}
-          </select>
-        </div>
+
         <button
           type="submit"
           className="mt-3 px-4 py-2 bg-primaryMat/95 hover:bg-primaryMat text-white rounded"
         >
-          {isLoading ? <Loader /> : "Create Product"}
+          {isLoading ? <Loading /> : "Create Product"}
         </button>
         {isError && (
           <div className="text-red-500 text-sm">

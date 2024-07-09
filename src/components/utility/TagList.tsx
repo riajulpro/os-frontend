@@ -5,9 +5,9 @@ import Image from "next/image";
 import { BsPlus } from "react-icons/bs";
 import { useDeleteTagMutation, useGetAllTagsQuery } from "@/redux/features/tag.api";
 import TagForm from "./TagForm";
-import { Loader } from "lucide-react";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import Loading from "@/app/loading";
 
 export type ITag = { _id: string; label: string; value: string, image: string };
 
@@ -39,7 +39,7 @@ const TagList: React.FC = () => {
   };
 
   if (isLoading) return <div className="w-full center">
-    <Loader />
+    <Loading />
   </div>;
   if (isError) return <p>Error loading tags.</p>;
 

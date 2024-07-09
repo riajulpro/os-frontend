@@ -9,7 +9,7 @@ import { IProduct } from "@/types/product";
 import { useGetAllProductsQuery } from "@/redux/features/product/product.api";
 import { useGetAllCategoriesQuery } from "@/redux/features/category/category.api";
 import { useGetAllBrandsQuery } from "@/redux/features/brand/brand.api";
-import { Loader } from "lucide-react";
+import Loading from "@/app/loading";
 
 const ProductsView: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -80,8 +80,8 @@ const ProductsView: React.FC = () => {
   const filteredProducts = data?.data || [];
   const totalPages = data?.total ? Math.ceil(data?.total / productsPerPage) : 0;
 
-  if (isLoading) return <div className="w-full center h-[400px]">
-  <Loader />
+  if (isLoading) return <div className="w-full center h-[500px] md:h-[800px]">
+  <Loading />
 </div>;
 
   if (error) {

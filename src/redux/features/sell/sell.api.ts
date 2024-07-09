@@ -20,11 +20,28 @@ const sellAPI = api.injectEndpoints({
       providesTags: ["Sell"],
     }),
     trackUserOrder: builder.query({
-      query: (orderId:string) =>
-        `/sell/my/order/${orderId}`,
+      query: (orderId: string) => `/sell/my/order/${orderId}`,
       providesTags: ["Sell"],
+    }),
+    getEarning: builder.query({
+      query: () => `/sell/earning/get`,
+      providesTags: ["Sell"],
+    }),
+    updateSellStatus: builder.mutation({
+      query: ({ id, status }) => ({
+        url: `/sell/${id}`,
+        method: "PATCH",
+        body: { status },
+      }),
+      invalidatesTags: ["Sell"],
     }),
   }),
 });
 
-export const { useGetAllSellsQuery, useGetUserOrderHistroyQuery ,useTrackUserOrderQuery} = sellAPI;
+export const {
+  useGetAllSellsQuery,
+  useGetUserOrderHistroyQuery,
+  useTrackUserOrderQuery,
+  useGetEarningQuery,
+  useUpdateSellStatusMutation,
+} = sellAPI;

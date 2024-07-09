@@ -5,7 +5,6 @@ import {
   useGetAllProductsQuery,
   useUpdateProductMutation,
 } from "@/redux/features/product/product.api";
-import { Loader } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -17,6 +16,7 @@ import { useGetAllBrandsQuery } from "@/redux/features/brand/brand.api";
 import { useGetAllTagsQuery } from "@/redux/features/tag.api";
 import { LuUploadCloud } from "react-icons/lu";
 import { MdClose } from "react-icons/md";
+import Loading from "@/app/loading";
 
 interface FormState {
   name: string;
@@ -145,7 +145,7 @@ const ManageProducts = () => {
   if (isLoading)
     return (
       <div className="center w-full h-[200px]">
-        <Loader />
+        <Loading />
       </div>
     );
   if (isSuccessDel) {
@@ -370,8 +370,8 @@ const ManageProducts = () => {
                 className="w-full p-2 mb-4 border rounded"
                 required
               >
-                <option value={form.tag?._id! as string}>
-                  {form.tag?.label}
+                <option value={form.tag?._id! as string || ""}>
+                  {form.tag?.label || "select tag"}
                 </option>
                 {tags?.data?.map((tag: any) => (
                   <option key={tag?._id} value={tag?._id}>

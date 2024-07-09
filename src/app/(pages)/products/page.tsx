@@ -1,9 +1,9 @@
 import ProductsView from "@/views/ProductsView";
 
 const ProductsPage = () => {
-  return <div>
+  return <section>
     <ProductsView />
-  </div>;
+  </section>;
 };
 
 export default ProductsPage;
