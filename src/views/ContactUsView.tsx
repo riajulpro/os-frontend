@@ -58,7 +58,7 @@ const ContactUsView = ({ className }: { className?: string }) => {
       form.reset();
     } catch (error: any) {
       console.log(error.message);
-      toast.error("An error occurred. Please try again.");
+      toast.error("An error occurred. Please try again. again!");
     }
   };
 
