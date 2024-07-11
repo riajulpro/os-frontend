@@ -5,10 +5,61 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, SendHorizontal } from "lucide-react";
 import { FormEvent } from "react";
+import { toast } from "sonner";
+
 const ContactUsView = ({ className }: { className?: string }) => {
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("You have clicked!");
+
+    const form = e.target as HTMLFormElement;
+
+    try {
+      const formData = new FormData(e.currentTarget);
+
+      const data = {
+        fullName: formData.get("fullName") as string,
+        email: formData.get("email") as string,
+        subject: formData.get("subject") as string,
+        message: formData.get("message") as string,
+      };
+
+      // Validate form data
+      if (!data.fullName || !data.email || !data.subject || !data.message) {
+        return toast.error("Please fill in all fields.");
+      }
+
+      if (!/\S+@\S+\.\S+/.test(data.email)) {
+        return toast.error("Please enter a valid email address.");
+      }
+
+      const url = process.env.NEXT_PUBLIC_API_URL as string;
+      const res = await fetch(`${url}/contact/send`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        return toast.error("Something went wrong, please try again.");
+      }
+
+      const result = await res.json();
+      if (!result.success) {
+        return toast.error("Something went wrong, please try again.");
+      }
+
+      toast.message("Success", {
+        description:
+          "Thank you for submitting your query. We got your message. Soon we will reach out to you.",
+      });
+
+      form.reset();
+    } catch (error: any) {
+      console.log(error.message);
+      toast.error("An error occurred. Please try again.");
+    }
   };
 
   return (
@@ -41,19 +92,38 @@ const ContactUsView = ({ className }: { className?: string }) => {
             <form onSubmit={handleSubmit} className="flex flex-col gap-5">
               <div className="grid w-full items-center gap-2">
                 <Label htmlFor="name">Your fullname</Label>
-                <Input type="text" id="name" placeholder="Your fullname" />
+                <Input
+                  type="text"
+                  id="name"
+                  placeholder="Your fullname"
+                  name="fullName"
+                />
               </div>
               <div className="grid w-full items-center gap-2">
                 <Label htmlFor="email">Email</Label>
-                <Input type="email" id="email" placeholder="Email" />
+                <Input
+                  type="email"
+                  id="email"
+                  placeholder="Email"
+                  name="email"
+                />
               </div>
               <div className="grid w-full items-center gap-2">
                 <Label htmlFor="subject">Subject</Label>
-                <Input type="text" id="subject" placeholder="Subject" />
+                <Input
+                  type="text"
+                  id="subject"
+                  placeholder="Subject"
+                  name="subject"
+                />
               </div>
               <div className="grid w-full gap-2">
                 <Label htmlFor="message">Your message</Label>
-                <Textarea placeholder="Type your message here." id="message" />
+                <Textarea
+                  placeholder="Type your message here."
+                  id="message"
+                  name="message"
+                />
               </div>
 
               <Button
