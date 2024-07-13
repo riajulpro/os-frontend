@@ -70,7 +70,10 @@ const BillingForm: React.FC = () => {
 
     const result = await res.json();
 
-    if (result.success) {
+    if (
+      result.success ||
+      result.message === "Billing information already exists!"
+    ) {
       router.push("/payment");
     }
   };
