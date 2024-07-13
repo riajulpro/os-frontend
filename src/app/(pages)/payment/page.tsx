@@ -2,6 +2,10 @@
 
 import CheckoutPage from "@/components/payments/CheckoutPage";
 import { useAppSelector } from "@/redux/hook";
+<<<<<<< HEAD
+=======
+// import { useAppSelector } from "@/redux/hook";
+>>>>>>> 14d682090bcf48d81f5e37d630f4d19148b370d9
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
@@ -13,7 +17,13 @@ const stripePromise = loadStripe(
 );
 
 export default function Payment() {
+<<<<<<< HEAD
   const { subtotal: amount } = useAppSelector((state) => state.cart);
+=======
+  // const { token } = useAppSelector((state) => state.auth);
+  const { subtotal: amount } = useAppSelector((state) => state.cart);
+  // const router = useRouter();
+>>>>>>> 14d682090bcf48d81f5e37d630f4d19148b370d9
 
 
   return (

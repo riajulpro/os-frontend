@@ -64,8 +64,8 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-[15px]">
-      <div className="flex items-center justify-center gap-[15px]">
-        <div className="w-[350px] h-[450px] overflow-hidden rounded-[15px]">
+      <div className="flex items-center justify-center gap-[50px]">
+        <div className="w-[510px] h-[450px] overflow-hidden rounded-[15px]">
           <Image
             src={"/images/authLady.png"}
             alt="auth"
