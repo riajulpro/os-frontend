@@ -1,6 +1,7 @@
 "use client";
 
 import CheckoutPage from "@/components/payments/CheckoutPage";
+import { useAppSelector } from "@/redux/hook";
 // import { useAppSelector } from "@/redux/hook";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -17,7 +18,7 @@ const stripePromise = loadStripe(
 
 export default function Payment() {
   // const { token } = useAppSelector((state) => state.auth);
-  // const { subtotal: amount } = useAppSelector((state) => state.cart);
+  const { subtotal: amount } = useAppSelector((state) => state.cart);
   // const router = useRouter();
 
   // useEffect(() => {
