@@ -3,7 +3,7 @@ import PopUpModal from "@/components/ui/PopUpModal";
 import ProgressBar from "@/components/ui/ProgressBar";
 import { useAppSelector } from "@/redux/hook";
 import { IProduct } from "@/types/product";
-import { ISell } from "@/types/sell";
+import { IOrder } from "@/types/sell";
 import { getOrderProgresCode } from "@/utils/getOrderProggresCode";
 import { format } from "date-fns";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -26,7 +26,7 @@ const validationSchema = Yup.object({
 
 const TrackOrder = () => {
   const [show, setShow] = useState(false);
-  const [orderData, setOrderData] = useState<ISell>();
+  const [orderData, setOrderData] = useState<IOrder>();
   const { token } = useAppSelector((state) => state.auth);
 
   const handleSubmit = async (value: { orderId: string }) => {
@@ -107,39 +107,45 @@ const TrackOrder = () => {
 
       <PopUpModal setState={setShow} state={show}>
         <div className="w-[90vw] sm:w-[700px] bg-white border-[1px] border-borderColor p-[15px]  rounded-[8px]">
-          <div className="w-full flex items-start justify-start gap-[20px]">
-            <Image
-              src={(orderData?.productId as IProduct)?.photo || "/"}
-              width={150}
-              height={70}
-              className="rounded-[8px]"
-              alt="product"
-            />
-            <div className="flex flex-col gap-[5px] items-start justify-start">
-              <h1 className="text-[20px] font-[600] text-primaryTxt">
-                {(orderData?.productId as IProduct)?.name}
-              </h1>
-              <p className="text-primaryTxt w-full flex gap-[2px]">
-                <span className="font-[600] center gap-[5px] w-fit">
-                  <BsCalendar2Event /> Order date:
-                </span>
-                {format(orderData?.date || "2023-07-02", "MMM dd")}
-              </p>
-              <p className="text-primaryTxt w-full flex gap-[2px]">
-                <span className="font-[600] center gap-[5px] w-fit">
-                  <MdDiscount /> Quantity:
-                </span>
-                {orderData?.quantity} pcs
-              </p>
-            </div>
+          <div className="flex flex-col gap-[20px]">
+            {orderData?.sellData?.map((order) => (
+              <>
+                <div className="w-full flex items-start justify-start gap-[20px]">
+                  <Image
+                    src={(order?.productId as IProduct)?.photo || "/"}
+                    width={150}
+                    height={70}
+                    className="rounded-[8px]"
+                    alt="product"
+                  />
+                  <div className="flex flex-col gap-[5px] items-start justify-start">
+                    <h1 className="text-[20px] font-[600] text-primaryTxt">
+                      {(order?.productId as IProduct)?.name}
+                    </h1>
+                    <p className="text-primaryTxt w-full flex gap-[2px]">
+                      <span className="font-[600] center gap-[5px] w-fit">
+                        <BsCalendar2Event /> Order date:
+                      </span>
+                      {format(orderData?.date || "2023-07-02", "MMM dd")}
+                    </p>
+                    <p className="text-primaryTxt w-full flex gap-[2px]">
+                      <span className="font-[600] center gap-[5px] w-fit">
+                        <MdDiscount /> Quantity:
+                      </span>
+                      {order?.quantity} pcs
+                    </p>
+                  </div>
+                </div>
+                <div className="w-full hidden sm:flex">
+                  <ProgressBar
+                    currentStep={
+                      getOrderProgresCode(orderData.status || "Pending") + 1
+                    }
+                  />
+                </div>
+              </>
+            ))}
           </div>
-          <div className="w-full hidden sm:flex">
-            <ProgressBar
-              currentStep={
-                getOrderProgresCode(orderData?.status || "Pending") + 1
-              }
-            />
-          </div>{" "}
           <button
             onClick={() => setShow(false)}
             className="py-[8px] mt-[20px] w-full bg-primaryMat text-white rounded-[5px]"

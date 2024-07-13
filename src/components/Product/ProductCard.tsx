@@ -1,4 +1,3 @@
-import { IProduct } from "@/types/product";
 import { trimText } from "@/utils/trimText";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,7 +15,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     <div className="relative w-full h-[410px]  overflow-hidden rounded-[15px] border-[1px] border-borderColor bg-white">
       {product.tag && (
         <span
-          className={`bg-primaryMat text-white text-xs font-bold uppercase px-[20px] py-2 absolute top-0 left-0 rounded-br-[20px] z-50`}
+          className={`bg-primaryMat text-white text-xs font-bold uppercase px-[20px] py-2 absolute top-0 left-0 rounded-br-[20px] z-20`}
         >
           {product.tag?.label}
         </span>

@@ -2,7 +2,8 @@
 
 import convertToSubcurrency from "@/lib/convertToSubcurrency";
 import { clearCart } from "@/redux/features/cart/cart.slice";
-import { useAppDispatch } from "@/redux/hook";
+import { useCreateOrderMutation } from "@/redux/features/sell/sell.api";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import {
   CardCvcElement,
   CardExpiryElement,
@@ -10,6 +11,7 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
+import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -21,8 +23,17 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { cart, subtotal } = useAppSelector((stae) => stae.cart);
+  const { user } = useAppSelector((state) => state.auth);
+  const [createOrder] = useCreateOrderMutation();
+  console.log(cart);
   const dispatch = useAppDispatch();
 
+  // sellData,
+  // totalAmount,
+  // paymentMethod,
+  // paymentStatus,
+  // customer,
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment`, {
       method: "POST",
@@ -55,20 +66,35 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
       toast.error("Carn is not available");
       return;
     }
-    const { error } = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: {
-        card: cardElement,
-      },
-    });
+    try {
+      const { error } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+        },
+      });
 
-    if (error) {
-      setErrorMessage(error.message);
-    } else {
-      router.push(`/payment-success?amount=${amount}`);
-      dispatch(clearCart());
+      if (error) {
+        setErrorMessage(error.message);
+      } else {
+        const payload = {
+          sellData: cart,
+          paymentMethod: "card",
+          paymentStatus: "paid",
+          customer: user?._id,
+          totalAmount: amount,
+        };
+
+        const order = await createOrder(payload);
+
+        dispatch(clearCart());
+        Cookies.remove("redirect");
+        router.push(`/payment-success?amount=${amount}`);
+      }
+
+      setLoading(false);
+    } catch (error) {
+      toast.error("Something went wrong");
     }
-
-    setLoading(false);
   };
 
   if (!clientSecret || !stripe || !elements) {

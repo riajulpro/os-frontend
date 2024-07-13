@@ -17,7 +17,9 @@ const PopUpModal: React.FC<PropsType> = ({ children, state, setState }) => {
               onClick={() => setState(false)}
             ></div>
 
-            <div className="z-[100] relative">{children}</div>
+            <div className="z-[100] relative overflow-auto h-[90vh] smoothBar">
+              {children}
+            </div>
           </div>
         </>
       ) : (

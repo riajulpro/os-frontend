@@ -3,11 +3,20 @@ import { IProduct } from "./product";
 
 export type IStatus = "Pending" | "On the way" | "Delivered";
 
-export interface ISell {
+export interface IOrder {
   _id: string;
-  productId: IProduct | string | { name: string };
-  quantity: number;
-  date: string;
-  customer: TCustomer | string | { firstName: string };
+  sellData: ISellData[];
+  paymentMethod: string;
+  paymentStatus: string;
+  totalAmount: number;
+  customer: TCustomer;
+  date: Date;
   status: IStatus;
+  __v: number;
+}
+
+export interface ISellData {
+  productId: IProduct;
+  quantity: number;
+  _id: string;
 }

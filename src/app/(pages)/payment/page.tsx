@@ -1,12 +1,12 @@
 "use client";
 
 import CheckoutPage from "@/components/payments/CheckoutPage";
-import { useAppSelector } from "@/redux/hook";
+// import { useAppSelector } from "@/redux/hook";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import Cookies from "js-cookie";
+// import { useRouter } from "next/navigation";
+// import { useEffect } from "react";
+// import Cookies from "js-cookie";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -16,16 +16,16 @@ const stripePromise = loadStripe(
 );
 
 export default function Payment() {
-  const { token } = useAppSelector((state) => state.auth);
-  const { subtotal: amount } = useAppSelector((state) => state.cart);
-  const router = useRouter();
+  // const { token } = useAppSelector((state) => state.auth);
+  // const { subtotal: amount } = useAppSelector((state) => state.cart);
+  // const router = useRouter();
 
-  useEffect(() => {
-    if (!token) {
-      Cookies.set("redirect", "/payment");
-      return router.push("/login");
-    }
-  }, [token, router, amount]);
+  // useEffect(() => {
+  //   if (!token) {
+  //     Cookies.set("redirect", "/payment");
+  //     return router.push("/login");
+  //   }
+  // }, [token, router, amount]);
 
   return (
     <main className="max-w-md mx-auto p-10 border m-10 rounded-md shadow-md">

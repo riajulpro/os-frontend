@@ -1,18 +1,26 @@
 import { api } from "@/redux/api/appSlice";
-import { ISell } from "@/types/sell";
+import { IOrder } from "@/types/sell";
 
 const sellAPI = api.injectEndpoints({
   endpoints: (builder) => ({
     getAllSells: builder.query<
       {
         data: any;
-        sales: ISell[];
+        sales: IOrder[];
         total: number;
       },
       { page: number; limit: number }
     >({
       query: ({ page, limit }) => `sell?page=${page}&limit=${limit}`,
       providesTags: ["Sell"],
+    }),
+    createOrder: builder.mutation({
+      query: (payload) => ({
+        url: `/sell`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Sell"],
     }),
     getUserOrderHistroy: builder.query({
       query: ({ page = 1 }: { page?: number }) =>
@@ -44,4 +52,5 @@ export const {
   useTrackUserOrderQuery,
   useGetEarningQuery,
   useUpdateSellStatusMutation,
+  useCreateOrderMutation,
 } = sellAPI;

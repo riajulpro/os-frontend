@@ -33,6 +33,7 @@ const CreateAccount = () => {
 
   const handleRegister = async (values: TFormValues) => {
     const toastId = toast.loading("Please wait...");
+
     try {
       const { data } = await register(values);
       if (!data) {
@@ -44,6 +45,7 @@ const CreateAccount = () => {
       toast.success("Successfully registered", {
         description: "Now please login",
       });
+
       router.push("/login");
     } catch (error) {
       console.log(error);
